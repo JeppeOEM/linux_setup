@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# File to update
+ZSHRC="$HOME/.zshrc"
+
+# Check if at least one argument is provided
+if [ "$#" -eq 0 ]; then
+    echo "No plugins specified. Usage: $0 plugin1 plugin2 ..."
+    exit 1
+fi
+
+# Plugins to add from command-line arguments
+PLUGINS_TO_ADD=("$@")
+
+# Function to check if a plugin is already in the list
+plugin_exists() {
+    local plugin=$1
+    grep -q "plugins=.*\b$plugin\b" "$ZSHRC"
+}
+
+# Read the current plugins line
+CURRENT_PLUGINS=$(grep "^plugins=" "$ZSHRC")
+
+# Extract the current plugins into an array
+CURRENT_PLUGINS_ARRAY=($(echo "$CURRENT_PLUGINS" | sed -e 's/plugins=(//' -e 's/)//'))
+
+# Combine current plugins with new plugins, ensuring no duplicates
+for plugin in "${PLUGINS_TO_ADD[@]}"; do
+    if ! plugin_exists "$plugin"; then
+        CURRENT_PLUGINS_ARRAY+=("$plugin")
+    fi
+done
+
+# Form the new plugins line
+NEW_PLUGINS_LINE="plugins=(${CURRENT_PLUGINS_ARRAY[*]})"
+
+# Update the .zshrc file
+sed -i "s|^plugins=.*|$NEW_PLUGINS_LINE|" "$ZSHRC"
+
+echo "Plugins updated. The new plugins line is:"
+grep "^plugins=" "$ZSHRC"
