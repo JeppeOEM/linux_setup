@@ -19,6 +19,8 @@ sudo apt install build-essential
 sudo apt install curl
 sudo apt install gh
 sudo apt install feh
+sudo apt install tmux
+cp ./.tmux.conf ~/
 cd ~/.config 
 git clone https://github.com/JeppeOEM/nvim.git
 mkdir -p ~/.local/share/fonts
