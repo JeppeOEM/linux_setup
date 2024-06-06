@@ -18,6 +18,7 @@ sudo apt install neovim
 sudo apt install build-essential
 sudo apt install curl
 sudo apt install gh
+sudo apt install feh
 cd ~/.config 
 git clone https://github.com/JeppeOEM/nvim.git
 mkdir -p ~/.local/share/fonts
@@ -38,4 +39,19 @@ chsh -s $(which zsh)
 cd ~/scripts
 chmod 755 add_to_zshrc
 ./add_to_zshrc fd zsh-syntax-highlighting zsh-autosuggestions
+cat << 'EOF' >> ~/.zshrc
 
+# Custom function to check for virtual environment
+pip() {
+    if [ -z "\$VIRTUAL_ENV" ]; then
+        echo "Error: You are not in a virtual environment. Please activate a virtual environment before using pip."
+    else
+        command pip "\$@"
+    fi
+}
+EOF
+
+source ~/.zshrc
+sudo apt update
+sudo apt install nodejs
+sudo apt install npm
