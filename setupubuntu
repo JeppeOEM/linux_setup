@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 sudo apt-get update
+sudo apt install snapd
 sudo apt-get install git-all
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
 sudo apt-get install ca-certificates curl
@@ -18,10 +19,27 @@ sudo apt install neovim
 sudo apt install build-essential
 sudo apt install curl
 sudo apt install gh
+#feh is for viewing images
 sudo apt install feh
 sudo apt install tmux
+sudo apt install nodejs
+sudo apt install npm
+sudo apt install fd-find
+sudo apt install ripgrep
+sudo apt install xclip
+sudo apt install fzf
+#they want you to use snap
+sudo snap install postman
+sudo docker run hello-world
+sudo npm install pm2 -g
+
+#installing dependencies for pyenv
+#https://itsfoss.com/pyenv-ubuntu/
+sudo apt install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
+#installing pyenv
+curl https://pyenv.run | bash
 cp ./.tmux.conf ~/
-cd ~/.config 
+mkdir -p ~/.config && cd ~/.config
 git clone https://github.com/JeppeOEM/nvim.git
 mkdir -p ~/.local/share/fonts
 cd ~/.local/share/fonts && curl -fLO https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/DroidSansMono/DroidSansMNerdFont-Regular.otf
@@ -33,27 +51,91 @@ make all test
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-
-sudo apt install fd-find
-sudo apt install ripgrep
-sudo docker run hello-world
+git clone https://github.com/github/copilot.vim.git \
+  ~/.config/nvim/pack/github/start/copilot.vim
 chsh -s $(which zsh)
 cd ~/scripts
 chmod 755 add_to_zshrc
 ./add_to_zshrc fd zsh-syntax-highlighting zsh-autosuggestions
 cat << 'EOF' >> ~/.zshrc
 
-# Custom function to check for virtual environment
+export OPENAI_API_KEY=""
+export PATH="$PATH:/home/mrqdt/scripts/cmds"
+
 pip() {
-    if [ -z "\$VIRTUAL_ENV" ]; then
+    if [ -z "$VIRTUAL_ENV" ]; then
         echo "Error: You are not in a virtual environment. Please activate a virtual environment before using pip."
     else
-        command pip "\$@"
+        command pip "$@"
     fi
 }
+
+add_quotes() {
+    cat "\"$1\""
+    echo "\"$1\""
+}
+
+# https://beebom.com/how-use-chatgpt-linux-terminal/
+
+# Navi to the terminal-gbt directory
+
+alias oo='cd ~/Desktop/Info/NOTES && nvim .'
+alias oovim='cd ~/Desktop/Info/NOTES/vim && nvim .'
+  #alias chatc='cd /scripts/utils/terminal-gbt && sgpt --code'
+
+# Set PATH for custom scripts
+export PATH="$PATH:/home/mrqdt/scripts/cmds"
+
+# Alias to activate virtual environment
+alias venvgo=". .venv/bin/activate"
+
+# Function to create and activate a virtual environment
+alias venv="python3 -m venv .venv && . .venv/bin/activate"
+
+# Function to activate pip only if in a virtual environment
+pip() {
+    if [ -z "$VIRTUAL_ENV" ]; then
+        echo "Error: You are not in a virtual environment. Please activate a virtual environment before using pip."
+    else
+        command pip "$@"
+    fi
+}
+
+# Example aliases
+
+# Open Notes directory in nvim
+
+alias chat='cd ~/scripts/utils/terminal-gbt && venvgo'
+# Activate virtual environment and go to chat directory
+chatc() {
+
+    cd /home/mrqdt/scripts/utils/terminal-gbt && . .venv/bin/activate
+    echo "Enter your text for sgpt --code and press Enter:"
+    read input_text
+    command="sgpt --code \"$input_text\""
+    echo "Running command: $command"
+    eval $command
+}
+chats() {
+
+    cd /home/mrqdt/scripts/utils/terminal-gbt && . .venv/bin/activate
+    echo "Enter your text for sgpt and press Enter:"
+    read input_text
+    command="sgpt \"$input_text\""
+    echo "Running command: $command"
+    eval $command
+
+
+}
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+
+eval "$(pyenv virtualenv-init -)"
 EOF
+chmod +x /home/mrqdt/scripts/cmds/on
 
 source ~/.zshrc
-sudo apt update
-sudo apt install nodejs
-sudo apt install npm
+
