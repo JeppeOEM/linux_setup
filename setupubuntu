@@ -14,11 +14,20 @@ echo \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
+sudo apt update
+sudo apt upgrade
+sudo apt sqlite3
 sudo apt install zsh
 sudo apt install neovim
 sudo apt install build-essential
 sudo apt install curl
 sudo apt install gh
+sudo apt install mariadb-server
+sudo mysql_secure_installation
+#installing php
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+sudo chmod +x /usr/local/bin/composer
 #feh is for viewing images
 sudo apt install feh
 sudo apt install tmux
@@ -28,10 +37,29 @@ sudo apt install fd-find
 sudo apt install ripgrep
 sudo apt install xclip
 sudo apt install fzf
-#they want you to use snap
+#midnight commander / mc is a file manager
+sudo apt install mc
 sudo snap install postman
+sudo snap install discord
+sudo snap install telegram-desktop
 sudo docker run hello-world
 sudo npm install pm2 -g
+#installing i3
+#file manager for i3
+sudo apt install nemo -y
+
+/usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2024.03.04_all.deb keyring.deb SHA256:f9bb4340b5ce0ded29b7e014ee9ce788006e9bbfe31e96c09b2118ab91fca734
+sudo apt install ./keyring.deb
+echo "OUTPUT:"
+sudo echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" | sudo tee /etc/apt/sources.list.d/sur5r-i3.list
+echo "OUTPUT END"
+sudo apt install i3
+sudo apt install dmenu
+sudo apt install polybar
+sudo mkdir -p ~/.config/polybar && cp polybarconf ~/.config/polybar/config.ini
+sudo cp launc_polybar.sh ~/.config/polybar/launch.sh
+# copy the config file to the i3 config file
+mkdir -p ~/.config/i3 && cp i3conf ~/.config/i3/config
 
 #installing dependencies for pyenv
 #https://itsfoss.com/pyenv-ubuntu/
@@ -55,6 +83,9 @@ git clone https://github.com/github/copilot.vim.git \
   ~/.config/nvim/pack/github/start/copilot.vim
 chsh -s $(which zsh)
 cd ~/scripts
+#execute custom scrippts
+chmod +x /home/mrqdt/scripts/cmds/on
+chmod +x open_file.zsh
 chmod 755 add_to_zshrc
 ./add_to_zshrc fd zsh-syntax-highlighting zsh-autosuggestions
 cat << 'EOF' >> ~/.zshrc
@@ -135,7 +166,5 @@ eval "$(pyenv init -)"
 
 eval "$(pyenv virtualenv-init -)"
 EOF
-chmod +x /home/mrqdt/scripts/cmds/on
 
 source ~/.zshrc
-
