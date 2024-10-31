@@ -1,0 +1,27 @@
+#!/bin/zsh
+
+# Check if a filename is provided
+if [ "$#" -ne 1 ]; then
+    echo "Usage: copyfile <filename>"
+    exit 1
+fi
+
+FILE="$1"
+
+# Check if the file exists
+if [ ! -f "$FILE" ]; then
+    echo "File '$FILE' does not exist."
+    exit 1
+fi
+
+# Check if xclip is installed and copy the file content to the clipboard
+if command -v xclip &> /dev/null; then
+    xclip -sel clip < "$FILE"
+    echo "Content of '$FILE' copied to clipboard."
+elif command -v xsel &> /dev/null; then
+    xsel --clipboard < "$FILE"
+    echo "Content of '$FILE' copied to clipboard."
+else
+    echo "Neither xclip nor xsel is installed. Please install one of them."
+    exit 1
+fi
