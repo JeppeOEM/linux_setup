@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+# Define the path to the .tmuxsesh file
+TMUX_FILE="$PWD/.tmuxsesh"
+
+# Check if the .tmuxsesh file exists
+if [ -f "$TMUX_FILE" ]; then
+    # Read the session name from the .tmuxsesh file
+    SESSION_NAME=$(<"$TMUX_FILE")
+    echo "Session Name: $SESSION_NAME"  # Print the session name
+
+    # Check if the tmux session exists
+    if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+        # Attach to the existing tmux session
+        tmux attach-session -t "$SESSION_NAME"
+    else
+        echo "No existing tmux session named '$SESSION_NAME' found."
+    fi
+else
+    echo "No .tmuxsesh file found in the current directory."
+fi

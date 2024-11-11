@@ -1,0 +1,47 @@
+#!/bin/zsh
+
+# Check if an argument was provided
+if [ -z "$1" ]; then
+    echo "Please provide a directory name, e.g., cdc <project_name>"
+    exit 1
+fi
+
+# Construct the target directory path
+TARGET_DIR=~/code/$1
+
+# Check if the target directory exists
+if [ -d "$TARGET_DIR" ]; then
+    # Change to the target directory
+    cd "$TARGET_DIR" || exit
+
+    # Check if the .tmuxsesh file exists in the directory
+    if [ -f ".tmuxsesh" ]; then
+        # Read the desired session name from .tmuxsesh
+        SESSION_NAME=$(<.tmuxsesh)
+
+        # Check if already in a tmux session
+        if [ -n "$TMUX" ]; then
+            # Get the name of the current session
+            CURRENT_SESSION=$(tmux display-message -p '#S')
+
+            # If already in the desired session, just navigate to the folder
+            if [ "$CURRENT_SESSION" ]; then
+                echo "Already in tmux session $SESSION_NAME. Navigating to $TARGET_DIR."
+                cd $TARGET_DIR
+                nvim .
+            fi
+        fi
+
+        # If not in the session, or in a different session, run 'mux'
+        echo "Found .tmuxsesh, running mux..."
+        mux
+    else
+        # If .tmuxsesh does not exist, run 'inittmux'
+        echo "No .tmuxsesh found, running inittmux..."
+        inittmux
+    fi
+
+else
+    echo "Directory $TARGET_DIR does not exist."
+    exit 1
+fi

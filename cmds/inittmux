@@ -1,0 +1,29 @@
+#!/bin/zsh
+
+# Get the full path of the current directory
+SESSION_PATH="$PWD"
+
+# Define the path to the .tmuxsesh file
+TMUX_FILE="$SESSION_PATH/.tmuxsesh"
+
+# Check if the session already exists
+if tmux has-session -t "$SESSION_PATH" 2>/dev/null; then
+    # If it exists, attach to it
+    tmux attach-session -t "$SESSION_PATH"
+else
+    # If it doesn't exist, create a new session with the full path
+    tmux new-session -d -s "$SESSION_PATH" -c "$SESSION_PATH"  # Start a detached tmux session in the current directory
+
+    # Create the .tmuxsesh file immediately after the session is created
+    echo "$SESSION_PATH" > "$TMUX_FILE"
+    echo "Session path saved to .tmuxsesh"
+
+    # Send 'nvim' command to the first pane of the first window (0)
+    tmux send-keys -t "$SESSION_PATH:0" 'nvim' C-m
+
+    # Create a new window (the next available index, which will be 1)
+    tmux new-window -c "$SESSION_PATH" -n "Second Window"  # Create a new window in the same directory with a custom name
+
+    # Attach to the session
+    tmux attach-session -t "$SESSION_PATH"
+fi

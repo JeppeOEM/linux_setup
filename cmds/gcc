@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+# Check if a commit message is provided
+if [ -z "$1" ]; then
+    echo "Error: Commit message is required."
+    exit 1  # Exit with error code if no commit message
+fi
+
+# Print the commit message (for debugging purposes)
+echo "Committing with message: $1"
+
+# Stage all changes and commit with the provided message
+git add .
+git commit -m "$1"  #
