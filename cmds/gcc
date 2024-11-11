@@ -1,9 +1,0 @@
-#!/bin/zsh
-
-# Check if an argument was provided
-if [ -z "$1" ]; then
-    echo "Please provide a directory name, e.g., cdc <project_name>"
-    exit 1
-fi
-
-echo $1
