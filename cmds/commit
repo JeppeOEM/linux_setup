@@ -1,0 +1,16 @@
+#!/bin/zsh
+
+# Check if the commit message is provided
+if [ -z "$1" ]; then
+    echo "Please provide a commit message."
+    exit 1
+fi
+
+# Add all changes
+git add .
+
+# Commit with the provided message
+git commit -m "$1"
+
+# Optional: You can push after committing (uncomment the next line if desired)
+# git push

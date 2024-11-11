@@ -1,14 +1,9 @@
 #!/bin/zsh
 
-# Check if a commit message is provided
+# Check if an argument was provided
 if [ -z "$1" ]; then
-    echo "Error: Commit message is required."
-    exit 1  # Exit with error code if no commit message
+    echo "Please provide a directory name, e.g., cdc <project_name>"
+    exit 1
 fi
 
-# Print the commit message (for debugging purposes)
-echo "Committing with message: $1"
-
-# Stage all changes and commit with the provided message
-git add .
-git commit -m "$1"  #
+echo $1
