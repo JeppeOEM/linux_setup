@@ -15,6 +15,7 @@ if [ -f "$TMUX_FILE" ]; then
         tmux attach-session -t "$SESSION_NAME"
     else
         echo "No existing tmux session named '$SESSION_NAME' found."
+        inittmux
     fi
 else
     echo "No .tmuxsesh file found in the current directory."

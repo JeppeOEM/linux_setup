@@ -1,0 +1,28 @@
+#!/bin/sh
+
+folder=$(cat ~/scripts/cmds/dirkali)
+# Change directory to the folder
+
+# if [ $# -eq 0 ]; then
+  # No argument passed, use the value from the 'dirkali' file
+# else
+  # Argument passed, overwrite 'folder' with the argument value
+  # folder="$1"
+# fi
+
+# List the contents of the folder
+
+i3-msg "workspace 20"
+gnome-terminal -- zsh -ic "cd /home/mrqdt/code/$folder && mux; exec zsh"
+
+i3-msg "workspace 19"
+gnome-terminal -- zsh -ic "cd /home/mrqdt/code/$folder && ls; exec zsh"
+gnome-terminal -- zsh -ic "cd /home/mrqdt/code/$folder; exec zsh"
+
+
+i3-msg "workspace 18"
+sleep 1
+code .
+sleep 2
+i3-msg "workspace 8" 
+firefox --new-window https://www.google.com
